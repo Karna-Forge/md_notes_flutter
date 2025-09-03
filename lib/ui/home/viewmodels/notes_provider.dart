@@ -1,7 +1,8 @@
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
+import 'package:markdown_notes/data/utils/ux_simplification_utils.dart';
 import 'package:markdown_notes/services/storage_service.dart';
-import 'package:markdown_notes/ui/core/ui/models/note.dart';
+import 'package:markdown_notes/data/models/note.dart';
 import 'package:uuid/uuid.dart';
 
 class NotesProvider extends ChangeNotifier {
@@ -64,7 +65,7 @@ class NotesProvider extends ChangeNotifier {
   }
 
   Note createEmpty() {
-    final note = Note(id: _uuid.v4(), title: '', content: '');
+    final note = Note.withDefaults(id: _uuid.v4(), title: '', content: '');
     _notes.add(note);
     notifyListeners();
     return note;
@@ -74,12 +75,11 @@ class NotesProvider extends ChangeNotifier {
       {String? title, String? content, bool? pinned, bool? archived}) {
     final idx = _notes.indexWhere((n) => n.id == note.id);
     if (idx == -1) return;
-    final updated = note.copyWith(
+    final updated = note.copyUpdating(
       title: title,
       content: content,
       pinned: pinned,
       archived: archived,
-      updatedAt: DateTime.now(),
     );
     _notes[idx] = updated;
     notifyListeners();

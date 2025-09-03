@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:markdown_notes/ui/core/ui/models/note.dart';
+import 'package:markdown_notes/data/models/note.dart';
 
 class NoteListItem extends StatelessWidget {
   final Note note;

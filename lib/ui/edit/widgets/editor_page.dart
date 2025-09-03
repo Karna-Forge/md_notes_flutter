@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown_notes/ui/core/ui/models/note.dart';
+import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:markdown_notes/widgets/markdown_toolbar.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ class _EditorPageState extends State<EditorPage> {
     return provider.notes.firstWhere((n) => n.id == widget.noteId,
         orElse: () =>
             // fallback in case we navigated fast
-            Note(id: widget.noteId, title: '', content: ''));
+            Note.withDefaults(id: widget.noteId, title: '', content: ''));
   }
 
   @override
@@ -63,7 +63,8 @@ class _EditorPageState extends State<EditorPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<NotesProvider>();
     final note = provider.notes.firstWhere((n) => n.id == widget.noteId,
-        orElse: () => Note(id: widget.noteId, title: '', content: ''));
+        orElse: () =>
+            Note.withDefaults(id: widget.noteId, title: '', content: ''));
 
     return Scaffold(
       appBar: AppBar(

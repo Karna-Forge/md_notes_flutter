@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:markdown_notes/ui/core/ui/models/note.dart';
+import 'package:markdown_notes/data/models/note.dart';
 import 'package:path_provider/path_provider.dart';
 
 class StorageService {
