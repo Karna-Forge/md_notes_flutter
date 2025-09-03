@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
+import 'package:markdown_notes/services/storage_service.dart';
+import 'package:markdown_notes/ui/core/ui/models/note.dart';
 import 'package:uuid/uuid.dart';
-import '../models/note.dart';
-import '../services/storage_service.dart';
 
 class NotesProvider extends ChangeNotifier {
   final StorageService _storage = StorageService();
@@ -70,7 +70,8 @@ class NotesProvider extends ChangeNotifier {
     return note;
   }
 
-  void update(Note note, {String? title, String? content, bool? pinned, bool? archived}) {
+  void update(Note note,
+      {String? title, String? content, bool? pinned, bool? archived}) {
     final idx = _notes.indexWhere((n) => n.id == note.id);
     if (idx == -1) return;
     final updated = note.copyWith(

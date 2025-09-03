@@ -1,35 +1,32 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'providers/notes_provider.dart';
-import 'pages/home_page.dart';
+import 'main_development.dart' as development;
+
+import '/ui/core/themes/theme.dart';
+import '/ui/core/loacalization/app_localization.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const NotesApp());
+  development.main();
 }
 
-class NotesApp extends StatelessWidget {
-  const NotesApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => NotesProvider()..load(),
-      child: MaterialApp(
-        title: 'Markdown Notes',
-        theme: ThemeData(
-          colorSchemeSeed: Colors.indigo,
-          brightness: Brightness.light,
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorSchemeSeed: Colors.indigo,
-          brightness: Brightness.dark,
-          useMaterial3: true,
-        ),
-        themeMode: ThemeMode.system,
-        home: const HomePage(),
-      ),
+    return MaterialApp.router(
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      routerConfig: context.read<GoRouter>(),
+      localizationsDelegates: [
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        AppLocalizationDelegate(),
+      ],
+      debugShowCheckedModeBanner: false,
     );
   }
 }

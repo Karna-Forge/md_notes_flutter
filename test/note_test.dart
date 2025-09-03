@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:markdown_notes/models/note.dart';
+import 'package:markdown_notes/ui/core/ui/models/note.dart';
 
 void main() {
   test('Note json encode/decode', () {

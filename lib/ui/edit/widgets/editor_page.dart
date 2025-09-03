@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown_notes/ui/core/ui/models/note.dart';
+import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
+import 'package:markdown_notes/widgets/markdown_toolbar.dart';
 import 'package:provider/provider.dart';
-import '../providers/notes_provider.dart';
-import '../models/note.dart';
-import '../widgets/markdown_toolbar.dart';
 
 class EditorPage extends StatefulWidget {
   final String noteId;
@@ -21,10 +21,10 @@ class _EditorPageState extends State<EditorPage> {
 
   Note? _getNote(BuildContext context) {
     final provider = context.read<NotesProvider>();
-    return provider.notes.firstWhere((n) => n.id == widget.noteId, orElse: () => 
-      // fallback in case we navigated fast
-      Note(id: widget.noteId, title: '', content: '')
-    );
+    return provider.notes.firstWhere((n) => n.id == widget.noteId,
+        orElse: () =>
+            // fallback in case we navigated fast
+            Note(id: widget.noteId, title: '', content: ''));
   }
 
   @override
@@ -44,7 +44,8 @@ class _EditorPageState extends State<EditorPage> {
       title: _titleCtrl.text.trim(),
       content: _contentCtrl.text,
     );
-    if (widget.isNew && (_titleCtrl.text.trim().isEmpty && _contentCtrl.text.trim().isEmpty)) {
+    if (widget.isNew &&
+        (_titleCtrl.text.trim().isEmpty && _contentCtrl.text.trim().isEmpty)) {
       // If completely empty on first save, delete it
       provider.delete(note);
     }
@@ -61,9 +62,8 @@ class _EditorPageState extends State<EditorPage> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<NotesProvider>();
-    final note = provider.notes.firstWhere((n) => n.id == widget.noteId, orElse: () => 
-      Note(id: widget.noteId, title: '', content: '')
-    );
+    final note = provider.notes.firstWhere((n) => n.id == widget.noteId,
+        orElse: () => Note(id: widget.noteId, title: '', content: ''));
 
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +82,8 @@ class _EditorPageState extends State<EditorPage> {
           IconButton(
             tooltip: note.archived ? 'Unarchive' : 'Archive',
             onPressed: () => provider.update(note, archived: !note.archived),
-            icon: Icon(note.archived ? Icons.unarchive : Icons.archive_outlined),
+            icon:
+                Icon(note.archived ? Icons.unarchive : Icons.archive_outlined),
           ),
           IconButton(
             tooltip: 'Delete',
@@ -109,7 +110,8 @@ class _EditorPageState extends State<EditorPage> {
               ),
             ),
           ),
-          MarkdownToolbar(controller: _contentCtrl, onChanged: () => _save(context)),
+          MarkdownToolbar(
+              controller: _contentCtrl, onChanged: () => _save(context)),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),

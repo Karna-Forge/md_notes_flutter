@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_notes/ui/edit/widgets/editor_page.dart';
+import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
+import 'package:markdown_notes/widgets/note_list_item.dart';
 import 'package:provider/provider.dart';
-import '../providers/notes_provider.dart';
-import '../widgets/note_list_item.dart';
-import 'editor_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,9 @@ class HomePage extends StatelessWidget {
           IconButton(
             tooltip: provider.showArchived ? 'Show active' : 'Show archived',
             onPressed: () => provider.toggleArchivedView(),
-            icon: Icon(provider.showArchived ? Icons.unarchive : Icons.inventory_2_outlined),
+            icon: Icon(provider.showArchived
+                ? Icons.unarchive
+                : Icons.inventory_2_outlined),
           ),
           IconButton(
             tooltip: 'Toggle pin sort',
@@ -37,7 +39,8 @@ class HomePage extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Search notes…',
                 prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),
@@ -85,8 +88,7 @@ class _EmptyState extends StatelessWidget {
           children: [
             const Icon(Icons.note_alt_outlined, size: 64),
             const SizedBox(height: 12),
-            Text('No notes yet',
-                style: Theme.of(context).textTheme.titleLarge),
+            Text('No notes yet', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 6),
             Text(
               'Tap "New note" to create your first Markdown note.',
