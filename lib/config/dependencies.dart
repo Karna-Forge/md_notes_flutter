@@ -1,21 +1,31 @@
-import 'package:markdown_notes/services/storage_service.dart';
+import 'package:markdown_notes/data/repositories/i_notes_repository.dart';
+import 'package:markdown_notes/data/repositories/notes_repository.dart';
+import 'package:markdown_notes/data/services/notes/notes_service.dart';
+import 'package:markdown_notes/data/services/storage/storage_service.dart';
 import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '/routing/router.dart';
-import '/data/services/logging_service/i_logging_service.dart';
-import '/data/services/logging_service/local_logging_service.dart';
+import '../data/services/logging/i_logging_service.dart';
+import '../data/services/logging/local_logging_service.dart';
 
 List<SingleChildWidget> _commonServices = [
   Provider(create: (context) => router()),
   Provider(
     create: (context) => StorageService(),
+  ),
+  Provider(
+    create: (context) => NotesService(context.read()),
   )
 ];
-List<SingleChildWidget> _commonRepositories = [];
+List<SingleChildWidget> _commonRepositories = [
+  Provider(
+    create: (context) => NotesRepository(context.read()) as INotesRepository,
+  )
+];
 List<SingleChildWidget> _commonViewmodels = [
   ChangeNotifierProvider(
-    create: (context) => NotesProvider(),
+    create: (context) => NotesProvider(context.read())..load(),
   )
 ];
 
