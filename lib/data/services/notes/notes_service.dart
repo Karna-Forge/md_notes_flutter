@@ -1,26 +1,43 @@
-// lib/services/notes_service.dart
-import 'dart:collection';
 import 'package:markdown_notes/data/models/note.dart';
-import 'package:markdown_notes/data/services/storage/storage_service.dart';
-import 'package:markdown_notes/data/utils/ux_simplification_utils.dart';
+import 'package:markdown_notes/data/models/notes_filter.dart';
+import 'package:markdown_notes/data/services/notes/i_notes_service.dart';
+import 'package:markdown_notes/data/services/storage/i_notes_storage.dart';
 import 'package:uuid/uuid.dart';
 
-class NotesService {
-  final StorageService _storage;
+class NotesService implements INotesService {
+  final INotesStorage _storage;
   final _uuid = const Uuid();
 
-  final List<Note> _notes = [];
-  String _query = '';
-  bool _showArchived = false;
-  bool _sortPinnedFirst = true;
+  // In-memory cache (optional; can be removed if you prefer stateless service)
+  final List<Note> _cache = [];
 
   NotesService(this._storage);
 
-  // ---- Derived view ----
-  UnmodifiableListView<Note> get notes {
-    final q = _query.trim().toLowerCase();
-    final filtered = _notes.where((n) {
-      final matchesArchived = _showArchived ? n.archived : !n.archived;
+  // --- Persistence ---
+  @override
+  Future<List<Note>> getAll() async {
+    if (_cache.isEmpty) {
+      _cache
+        ..clear()
+        ..addAll(await _storage.readAll());
+    }
+    return List.unmodifiable(_cache);
+  }
+
+  @override
+  Future<void> saveAll(List<Note> notes) async {
+    _cache
+      ..clear()
+      ..addAll(notes);
+    await _storage.writeAll(_cache);
+  }
+
+  // --- Rules ---
+  @override
+  List<Note> applyFilter(List<Note> notes, NotesFilter filter) {
+    final q = (filter.query ?? '').trim().toLowerCase();
+    final filtered = notes.where((n) {
+      final matchesArchived = filter.archived ? n.archived : !n.archived;
       final matchesQuery = q.isEmpty ||
           n.title.toLowerCase().contains(q) ||
           n.content.toLowerCase().contains(q);
@@ -28,47 +45,24 @@ class NotesService {
     }).toList();
 
     filtered.sort((a, b) {
-      if (_sortPinnedFirst && a.pinned != b.pinned) return a.pinned ? -1 : 1;
+      if (filter.pinnedFirst && a.pinned != b.pinned) {
+        return a.pinned ? -1 : 1;
+      }
       return b.updatedAt.compareTo(a.updatedAt);
     });
 
-    return UnmodifiableListView(filtered);
+    return filtered;
   }
 
-  bool get showArchived => _showArchived;
-  String get query => _query;
-
-  // ---- UI state setters ----
-  void setQuery(String q) => _query = q;
-  void toggleArchivedView() => _showArchived = !_showArchived;
-  void toggleSortPinnedFirst() => _sortPinnedFirst = !_sortPinnedFirst;
-
-  // ---- CRUD (mutate in-memory list) ----
-  Future<void> load() async {
-    final loaded = await _storage.loadNotes();
-    _notes
-      ..clear()
-      ..addAll(loaded);
-  }
-
-  Future<void> persist() => _storage.saveNotes(_notes);
-
-  Note createEmpty() {
-    final note = Note.withDefaults(id: _uuid.v4(), title: '', content: '');
-    _notes.add(note);
-    return note;
-  }
-
-  void update(
-    Note note, {
-    String? title,
-    String? content,
-    bool? pinned,
-    bool? archived,
+  @override
+  Note createDraft({
+    required String title,
+    required String content,
+    bool pinned = false,
+    bool archived = false,
   }) {
-    final i = _notes.indexWhere((n) => n.id == note.id);
-    if (i == -1) return;
-    _notes[i] = note.copyUpdating(
+    return Note.withDefaults(
+      id: _uuid.v4(),
       title: title,
       content: content,
       pinned: pinned,
@@ -76,7 +70,19 @@ class NotesService {
     );
   }
 
-  void delete(Note note) {
-    _notes.removeWhere((n) => n.id == note.id);
+  @override
+  Note applyUpdate(
+    Note note, {
+    String? title,
+    String? content,
+    bool? pinned,
+    bool? archived,
+  }) {
+    return note.copyUpdating(
+      title: title,
+      content: content,
+      pinned: pinned,
+      archived: archived,
+    );
   }
 }

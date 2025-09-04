@@ -1,25 +1,24 @@
 import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/data/models/notes_filter.dart';
 
-abstract class INotesRepository {
-  Future<List<Note>> listNotes(NotesFilter filter);
+abstract class INotesService {
+  Future<List<Note>> getAll();
+  Future<void> saveAll(List<Note> notes);
 
-  Future<Note> create({
+  List<Note> applyFilter(List<Note> notes, NotesFilter filter);
+
+  Note createDraft({
     required String title,
     required String content,
     bool pinned = false,
     bool archived = false,
   });
 
-  Future<Note> update(
+  Note applyUpdate(
     Note note, {
     String? title,
     String? content,
     bool? pinned,
     bool? archived,
   });
-
-  Future<void> delete(String id);
-
-  Future<void> persist(); // optional no-op for some backends
 }

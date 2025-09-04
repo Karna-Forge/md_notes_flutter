@@ -1,55 +1,79 @@
-import 'dart:collection';
 import 'package:flutter/foundation.dart';
+import 'package:markdown_notes/data/models/notes_filter.dart';
 import 'package:markdown_notes/data/repositories/i_notes_repository.dart';
 import 'package:markdown_notes/data/models/note.dart';
 
 class NotesProvider extends ChangeNotifier {
   final INotesRepository _repo;
-  NotesProvider(this._repo);
 
-  UnmodifiableListView<Note> get notes => _repo.notes;
-  bool get showArchived => _repo.showArchived;
-  String get query => _repo.query;
+  // UI state
+  String? _query;
+  bool _archived = false;
+  bool _pinnedFirst = true;
 
-  Future<void> load() async {
-    await _repo.load();
+  List<Note> _visible = [];
+  List<Note> get notes => _visible;
+
+  NotesProvider(this._repo) {
+    init();
+  }
+
+  String? get query => _query;
+  bool get archived => _archived;
+  bool get pinnedFirst => _pinnedFirst;
+
+  NotesFilter get _filter => NotesFilter(
+        query: _query,
+        archived: _archived,
+        pinnedFirst: _pinnedFirst,
+      );
+
+  Future<void> init() async {
+    await refresh();
+  }
+
+  Future<void> refresh() async {
+    _visible = await _repo.listNotes(_filter);
     notifyListeners();
   }
 
-  Future<void> persist() => _repo.persist();
-
-  void setQuery(String q) {
-    _repo.setQuery(q);
-    notifyListeners();
+  // UI events
+  void setQuery(String? q) {
+    _query = (q?.isEmpty ?? true) ? null : q;
+    refresh();
   }
 
-  void toggleArchivedView() {
-    _repo.toggleArchivedView();
-    notifyListeners();
+  void toogleArchived() {
+    _archived = !_archived;
+    refresh();
   }
 
-  void toggleSortPinnedFirst() {
-    _repo.toggleSortPinnedFirst();
-    notifyListeners();
+  void togglePinned() {
+    _pinnedFirst = !_pinnedFirst;
+    refresh();
   }
 
-  Note createEmpty() {
-    final note = _repo.createEmpty();
-    notifyListeners();
-    return note;
+  Future<Note> create({required String title, required String content}) async {
+    final n = await _repo.create(title: title, content: content);
+    await refresh();
+    return n;
   }
 
-  void update(Note note,
-      {String? title, String? content, bool? pinned, bool? archived}) {
-    _repo.update(note,
+  Future<Note> createEmpty() async {
+    final n = await _repo.create(title: "", content: "");
+    await refresh();
+    return n;
+  }
+
+  Future<void> update(Note note,
+      {String? title, String? content, bool? pinned, bool? archived}) async {
+    await _repo.update(note,
         title: title, content: content, pinned: pinned, archived: archived);
-    notifyListeners();
-    _repo.persist();
+    await refresh();
   }
 
-  void delete(Note note) {
-    _repo.delete(note);
-    notifyListeners();
-    _repo.persist();
+  Future<void> delete(Note note) async {
+    await _repo.delete(note.id);
+    await refresh();
   }
 }

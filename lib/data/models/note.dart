@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'note.freezed.dart';
@@ -17,7 +16,7 @@ abstract class Note with _$Note {
     required DateTime updatedAt,
   }) = _Note;
 
-  factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
+  const Note._();
 
   factory Note.withDefaults({
     required String id,
@@ -40,11 +39,29 @@ abstract class Note with _$Note {
     );
   }
 
+  factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
+
   static String encodeList(List<Note> notes) =>
       jsonEncode(notes.map((e) => e.toJson()).toList());
 
-  static List<Note> decodeList(String raw) {
-    final data = jsonDecode(raw) as List<dynamic>;
-    return data.map((e) => Note.fromJson(e as Map<String, dynamic>)).toList();
+  static List<Note> decodeList(String raw) => (jsonDecode(raw) as List)
+      .map((e) => Note.fromJson(e as Map<String, dynamic>))
+      .toList();
+}
+
+extension NoteX on Note {
+  Note copyUpdating({
+    String? title,
+    String? content,
+    bool? pinned,
+    bool? archived,
+  }) {
+    return copyWith(
+        title: title ?? this.title,
+        content: content ?? this.content,
+        pinned: pinned ?? this.pinned,
+        archived: archived ?? this.archived,
+        updatedAt: DateTime.now(),
+        createdAt: DateTime.now());
   }
 }

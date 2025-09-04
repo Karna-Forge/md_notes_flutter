@@ -17,15 +17,15 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Markdown Notes'),
         actions: [
           IconButton(
-            tooltip: provider.showArchived ? 'Show active' : 'Show archived',
-            onPressed: () => provider.toggleArchivedView(),
-            icon: Icon(provider.showArchived
+            tooltip: provider.archived ? 'Show active' : 'Show archived',
+            onPressed: () => provider.toogleArchived(),
+            icon: Icon(provider.archived
                 ? Icons.unarchive
                 : Icons.inventory_2_outlined),
           ),
           IconButton(
             tooltip: 'Toggle pin sort',
-            onPressed: () => provider.toggleSortPinnedFirst(),
+            onPressed: () => provider.togglePinned(),
             icon: const Icon(Icons.push_pin),
           ),
           const SizedBox(width: 8),
@@ -62,8 +62,8 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          final created = context.read<NotesProvider>().createEmpty();
+        onPressed: () async {
+          final created = await context.read<NotesProvider>().createEmpty();
           Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => EditorPage(noteId: created.id, isNew: true),
           ));

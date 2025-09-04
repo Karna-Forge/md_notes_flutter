@@ -1,6 +1,9 @@
 import 'package:markdown_notes/data/repositories/i_notes_repository.dart';
 import 'package:markdown_notes/data/repositories/notes_repository.dart';
+import 'package:markdown_notes/data/services/notes/i_notes_service.dart';
 import 'package:markdown_notes/data/services/notes/notes_service.dart';
+import 'package:markdown_notes/data/services/storage/i_notes_storage.dart';
+import 'package:markdown_notes/data/services/storage/json_notes_storage.dart';
 import 'package:markdown_notes/data/services/storage/storage_service.dart';
 import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +18,10 @@ List<SingleChildWidget> _commonServices = [
     create: (context) => StorageService(),
   ),
   Provider(
-    create: (context) => NotesService(context.read()),
+    create: (context) => JsonNotesStorage(context.read()) as INotesStorage,
+  ),
+  Provider(
+    create: (context) => NotesService(context.read()) as INotesService,
   )
 ];
 List<SingleChildWidget> _commonRepositories = [
@@ -25,7 +31,7 @@ List<SingleChildWidget> _commonRepositories = [
 ];
 List<SingleChildWidget> _commonViewmodels = [
   ChangeNotifierProvider(
-    create: (context) => NotesProvider(context.read())..load(),
+    create: (context) => NotesProvider(context.read()),
   )
 ];
 

@@ -296,7 +296,7 @@ extension NotePatterns on Note {
 
 /// @nodoc
 @JsonSerializable()
-class _Note implements Note {
+class _Note extends Note {
   const _Note(
       {required this.id,
       required this.title,
@@ -304,7 +304,8 @@ class _Note implements Note {
       this.pinned = false,
       this.archived = false,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt})
+      : super._();
   factory _Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
 
   @override
