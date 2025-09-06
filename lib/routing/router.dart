@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:markdown_notes/routing/models/editor_screen_args.dart';
+import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 import 'package:markdown_notes/ui/edit/widgets/editor_page.dart';
-import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
+import 'package:markdown_notes/ui/home/viewmodels/home_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '/ui/home/widgets/home_screen.dart';
 
@@ -14,21 +16,19 @@ List<RouteBase> _commonRoutes = [
     path: Routes.homeScreen,
     builder: (context, state) {
       return ChangeNotifierProvider(
-        create: (context) => NotesProvider(context.read()),
-        child: HomeScreen(context.read()),
+        create: (_) => HomeViewModel(context.read()),
+        child: HomeScreen(context.read<AppLocalization>()),
       );
     },
   ),
   GoRoute(
     path: Routes.editScreen,
     builder: (context, state) {
-      final id = state.extra as String;
-      return ChangeNotifierProvider(
-        create: (context) => NotesProvider(context.read()),
-        child: EditorPage(
-          context.read(),
-          noteId: id,
-        ),
+      final extra = state.extra as EditorScreenArgs;
+      return EditorPage(
+        context.read(),
+        noteId: extra.id,
+        isNew: extra.isNew,
       );
     },
   ),
