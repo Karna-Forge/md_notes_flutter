@@ -7,7 +7,7 @@ part of 'notes_filter.dart';
 // **************************************************************************
 
 _NotesFilter _$NotesFilterFromJson(Map<String, dynamic> json) => _NotesFilter(
-      query: json['query'] as String? ?? null,
+      query: json['query'] as String?,
       archived: json['archived'] as bool? ?? false,
       pinnedFirst: json['pinnedFirst'] as bool? ?? false,
     );

@@ -16,7 +16,7 @@ List<RouteBase> _commonRoutes = [
     path: Routes.homeScreen,
     builder: (context, state) {
       return ChangeNotifierProvider(
-        create: (_) => HomeViewModel(context.read()),
+        create: (_) => HomeViewModel(context.read(), context.read()),
         child: HomeScreen(context.read<AppLocalization>()),
       );
     },

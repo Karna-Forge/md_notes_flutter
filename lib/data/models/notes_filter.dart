@@ -6,7 +6,7 @@ part 'notes_filter.g.dart';
 @freezed
 abstract class NotesFilter with _$NotesFilter {
   const factory NotesFilter({
-    @Default(null) String? query,
+    String? query,
     @Default(false) bool archived,
     @Default(false) bool pinnedFirst,
   }) = _NotesFilter;

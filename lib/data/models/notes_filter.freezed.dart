@@ -254,12 +254,11 @@ extension NotesFilterPatterns on NotesFilter {
 @JsonSerializable()
 class _NotesFilter implements NotesFilter {
   const _NotesFilter(
-      {this.query = null, this.archived = false, this.pinnedFirst = false});
+      {this.query, this.archived = false, this.pinnedFirst = false});
   factory _NotesFilter.fromJson(Map<String, dynamic> json) =>
       _$NotesFilterFromJson(json);
 
   @override
-  @JsonKey()
   final String? query;
   @override
   @JsonKey()

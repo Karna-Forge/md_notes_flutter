@@ -13,26 +13,25 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<NotesProvider>();
     final viewModel = context.watch<HomeViewModel>();
-    final notes = provider.notes;
+    final notes = viewModel.notes;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(_localization.markDownNotesTitle),
         actions: [
           IconButton(
-            tooltip: provider.archived
+            tooltip: viewModel.archived
                 ? _localization.activeToolTipMsg
                 : _localization.archiveToolTipMsg,
-            onPressed: () => provider.toogleArchived(),
-            icon: Icon(provider.archived
+            onPressed: () => viewModel.toogleArchived(),
+            icon: Icon(viewModel.archived
                 ? Icons.unarchive
                 : Icons.inventory_2_outlined),
           ),
           IconButton(
             tooltip: _localization.pinSortToolTipMsg,
-            onPressed: () => provider.togglePinned(),
+            onPressed: () => viewModel.togglePinned(),
             icon: const Icon(Icons.push_pin),
           ),
           const SizedBox(width: 8),
@@ -42,7 +41,7 @@ class HomeScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: TextField(
-              onChanged: provider.setQuery,
+              onChanged: viewModel.setQuery,
               decoration: InputDecoration(
                 hintText: _localization.searchHint,
                 prefixIcon: const Icon(Icons.search),

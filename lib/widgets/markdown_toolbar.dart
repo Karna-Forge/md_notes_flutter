@@ -88,8 +88,9 @@ class MarkdownToolbar extends StatelessWidget {
                   final end = sel.end;
                   if (start < 0 || end < 0) return;
                   final selected = text.substring(start, end);
-                  final linkText =
-                      selected.isEmpty ? _localization.linkTitleDefault : selected;
+                  final linkText = selected.isEmpty
+                      ? _localization.linkTitleDefault
+                      : selected;
                   final insert = '[$linkText](https://)';
                   final newText = text.replaceRange(start, end, insert);
                   controller.value = controller.value.copyWith(

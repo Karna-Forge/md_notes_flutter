@@ -28,10 +28,10 @@ List<SingleChildWidget> _commonServices = [
   ),
   Provider(
     create: (context) => NotesService(context.read()) as INotesService,
-  )
-  ,
+  ),
   Provider(
-    create: (context) => NavigationService(context.read()) as INavigationService,
+    create: (context) =>
+        NavigationService(context.read()) as INavigationService,
   )
 ];
 List<SingleChildWidget> _commonRepositories = [
