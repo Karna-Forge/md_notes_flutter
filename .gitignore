@@ -65,3 +65,6 @@ vendor/bundle/
 
 # FVM Version Cache
 .fvm/
+
+# remove agent nores
+AGENTS.md

@@ -5,7 +5,7 @@ import 'package:markdown_notes/data/services/notes/notes_service.dart';
 import 'package:markdown_notes/data/services/storage/i_notes_storage.dart';
 import 'package:markdown_notes/data/services/storage/json_notes_storage.dart';
 import 'package:markdown_notes/data/services/storage/storage_service.dart';
-import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
+import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '/routing/router.dart';
@@ -14,6 +14,9 @@ import '../data/services/logging/local_logging_service.dart';
 
 List<SingleChildWidget> _commonServices = [
   Provider(create: (context) => router()),
+  Provider(
+    create: (context) => AppLocalization(),
+  ),
   Provider(
     create: (context) => StorageService(),
   ),
@@ -29,11 +32,7 @@ List<SingleChildWidget> _commonRepositories = [
     create: (context) => NotesRepository(context.read()) as INotesRepository,
   )
 ];
-List<SingleChildWidget> _commonViewmodels = [
-  ChangeNotifierProvider(
-    create: (context) => NotesProvider(context.read()),
-  )
-];
+List<SingleChildWidget> _commonViewmodels = [];
 
 /// Configure dependencies for remote data.
 /// This dependency list uses repositories that connect to a remote server.

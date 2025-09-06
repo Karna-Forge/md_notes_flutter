@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 import 'package:markdown_notes/ui/edit/widgets/editor_page.dart';
 import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:markdown_notes/widgets/note_list_item.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen(this._localization, {super.key});
+
+  final AppLocalization _localization;
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +17,12 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Markdown Notes'),
+        title: Text(_localization.markDownNotesTitle),
         actions: [
           IconButton(
-            tooltip: provider.archived ? 'Show active' : 'Show archived',
+            tooltip: provider.archived
+                ? _localization.activeToolTipMsg
+                : _localization.archiveToolTipMsg,
             onPressed: () => provider.toogleArchived(),
             icon: Icon(provider.archived
                 ? Icons.unarchive

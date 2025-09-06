@@ -7,18 +7,26 @@ class AppLocalization {
   }
 
   static const _strings = <String, String>{
-    'welcome': "Kudos! Your project setup complete 🥳",
     'noDateMsg': "No Date Selected",
     'retry': "Retry",
+
+    // Home screen
+    'markDownNotesTitle': 'Markdown Notes',
+    'activeToolTipMsg': 'Show active',
+    'archivedTooTipMsg': 'Show archived',
+    'pinSortToolTipMsg': 'Toggle pin sort'
   };
 
   // If string for "label" does not exist, will show "[LABEL]"
   static String _get(String label) =>
       _strings[label] ?? '[${label.toUpperCase()}]';
 
-  String get welcome => _get('welcome');
   String get noDateMsg => _get('noDateMsg');
-  String retryTitle = _get('retry');
+  String get retryTitle => _get('retry');
+  String get markDownNotesTitle => _get('markDownNotesTitle');
+  String get activeToolTipMsg => _get('activeToolTipMsg');
+  String get archiveToolTipMsg => _get('activeToolTipMsg');
+  String get pinSortToolTipMsg => _get('pinSortToolTipMsg');
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {
