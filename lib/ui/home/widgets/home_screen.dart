@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/routing/models/editor_screen_args.dart';
 import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
+import 'package:markdown_notes/ui/core/ui/basewidgets/base_padding_widget.dart';
 import 'package:markdown_notes/ui/home/viewmodels/home_viewmodel.dart';
 import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:markdown_notes/widgets/note_list_item.dart';
@@ -38,33 +40,23 @@ class HomeScreen extends StatelessWidget {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: BasePaddingWidget(
             child: TextField(
               onChanged: viewModel.setQuery,
               decoration: InputDecoration(
                 hintText: _localization.searchHint,
                 prefixIcon: const Icon(Icons.search),
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               ),
             ),
           ),
         ),
       ),
       body: notes.isEmpty
-          ? _EmptyState(_localization)
-          : ListView.separated(
-              padding: const EdgeInsets.all(12),
-              itemCount: notes.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
-              itemBuilder: (context, i) => NoteListItem(
-                _localization,
-                note: notes[i],
-                onTap: () =>
-                    viewModel.gotoEditorPage(EditorScreenArgs(id: notes[i].id)),
-              ),
-            ),
+          ? _EmptyListState(_localization)
+          : _NotesList(
+              notes: notes, localization: _localization, viewModel: viewModel),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final created = await context.read<NotesProvider>().createEmpty();
@@ -78,8 +70,35 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _EmptyState extends StatelessWidget {
-  const _EmptyState(this._localization);
+class _NotesList extends StatelessWidget {
+  const _NotesList({
+    required this.notes,
+    required AppLocalization localization,
+    required this.viewModel,
+  }) : _localization = localization;
+
+  final List<Note> notes;
+  final AppLocalization _localization;
+  final HomeViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(12),
+      itemCount: notes.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      itemBuilder: (context, i) => NoteListItem(
+        _localization,
+        note: notes[i],
+        onTap: () =>
+            viewModel.gotoEditorPage(EditorScreenArgs(id: notes[i].id)),
+      ),
+    );
+  }
+}
+
+class _EmptyListState extends StatelessWidget {
+  const _EmptyListState(this._localization);
   final AppLocalization _localization;
 
   @override
