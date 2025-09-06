@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
+import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 import 'package:markdown_notes/widgets/markdown_toolbar.dart';
 import 'package:provider/provider.dart';
 
 class EditorPage extends StatefulWidget {
   final String noteId;
   final bool isNew;
-  const EditorPage({super.key, required this.noteId, this.isNew = false});
+  final AppLocalization _localization;
+  const EditorPage(this._localization,
+      {super.key, required this.noteId, this.isNew = false});
 
   @override
   State<EditorPage> createState() => _EditorPageState();
@@ -68,26 +71,34 @@ class _EditorPageState extends State<EditorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(note.title.isEmpty ? 'New note' : 'Edit note'),
+        title: Text(note.title.isEmpty
+            ? widget._localization.newNoteTitle
+            : widget._localization.editNoteTitle),
         actions: [
           IconButton(
-            tooltip: _preview ? 'Edit' : 'Preview',
+            tooltip: _preview
+                ? widget._localization.edit
+                : widget._localization.preview,
             onPressed: () => setState(() => _preview = !_preview),
             icon: Icon(_preview ? Icons.edit : Icons.preview),
           ),
           IconButton(
-            tooltip: note.pinned ? 'Unpin' : 'Pin',
+            tooltip: note.pinned
+                ? widget._localization.unpin
+                : widget._localization.pin,
             onPressed: () => provider.update(note, pinned: !note.pinned),
             icon: Icon(note.pinned ? Icons.push_pin : Icons.push_pin_outlined),
           ),
           IconButton(
-            tooltip: note.archived ? 'Unarchive' : 'Archive',
+            tooltip: note.archived
+                ? widget._localization.unarchive
+                : widget._localization.archive,
             onPressed: () => provider.update(note, archived: !note.archived),
             icon:
                 Icon(note.archived ? Icons.unarchive : Icons.archive_outlined),
           ),
           IconButton(
-            tooltip: 'Delete',
+            tooltip: widget._localization.delete,
             onPressed: () {
               provider.delete(note);
               Navigator.of(context).maybePop();
@@ -105,13 +116,13 @@ class _EditorPageState extends State<EditorPage> {
               controller: _titleCtrl,
               onChanged: (_) => _save(context),
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                hintText: 'Title',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: widget._localization.titleHint,
+                border: const OutlineInputBorder(),
               ),
             ),
           ),
-          MarkdownToolbar(
+          MarkdownToolbar(widget._localization,
               controller: _contentCtrl, onChanged: () => _save(context)),
           Expanded(
             child: Padding(
@@ -119,7 +130,7 @@ class _EditorPageState extends State<EditorPage> {
               child: _preview
                   ? Markdown(
                       data: _contentCtrl.text.isEmpty
-                          ? '_Nothing to preview yet…_\n\nTry **bold**, *italic*, `code`, lists, and more.'
+                          ? widget._localization.previewPlaceholder
                           : _contentCtrl.text,
                     )
                   : TextField(
@@ -128,9 +139,9 @@ class _EditorPageState extends State<EditorPage> {
                       maxLines: null,
                       expands: true,
                       keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        hintText: 'Write your note in Markdown…',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        hintText: widget._localization.contentHint,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
             ),

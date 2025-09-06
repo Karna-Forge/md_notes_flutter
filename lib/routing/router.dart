@@ -26,6 +26,7 @@ List<RouteBase> _commonRoutes = [
       return ChangeNotifierProvider(
         create: (context) => NotesProvider(context.read()),
         child: EditorPage(
+          context.read(),
           noteId: id,
         ),
       );

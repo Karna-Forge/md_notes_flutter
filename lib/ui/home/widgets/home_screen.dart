@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                 : Icons.inventory_2_outlined),
           ),
           IconButton(
-            tooltip: 'Toggle pin sort',
+            tooltip: _localization.pinSortToolTipMsg,
             onPressed: () => provider.togglePinned(),
             icon: const Icon(Icons.push_pin),
           ),
@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
             child: TextField(
               onChanged: provider.setQuery,
               decoration: InputDecoration(
-                hintText: 'Search notes…',
+                hintText: _localization.searchHint,
                 prefixIcon: const Icon(Icons.search),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -52,16 +52,18 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: notes.isEmpty
-          ? const _EmptyState()
+          ? _EmptyState(_localization)
           : ListView.separated(
               padding: const EdgeInsets.all(12),
               itemCount: notes.length,
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, i) => NoteListItem(
+                _localization,
                 note: notes[i],
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => EditorPage(noteId: notes[i].id),
+                    builder: (_) =>
+                        EditorPage(_localization, noteId: notes[i].id),
                   ));
                 },
               ),
@@ -70,18 +72,20 @@ class HomeScreen extends StatelessWidget {
         onPressed: () async {
           final created = await context.read<NotesProvider>().createEmpty();
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => EditorPage(noteId: created.id, isNew: true),
+            builder: (_) =>
+                EditorPage(_localization, noteId: created.id, isNew: true),
           ));
         },
         icon: const Icon(Icons.add),
-        label: const Text('New note'),
+        label: Text(_localization.newNote),
       ),
     );
   }
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState();
+  const _EmptyState(this._localization);
+  final AppLocalization _localization;
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +97,11 @@ class _EmptyState extends StatelessWidget {
           children: [
             const Icon(Icons.note_alt_outlined, size: 64),
             const SizedBox(height: 12),
-            Text('No notes yet', style: Theme.of(context).textTheme.titleLarge),
+            Text(_localization.emptyNotesTitle,
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 6),
             Text(
-              'Tap "New note" to create your first Markdown note.',
+              _localization.emptyNotesSubtitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),

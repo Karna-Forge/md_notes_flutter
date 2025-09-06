@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_notes/data/models/note.dart';
+import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 
 class NoteListItem extends StatelessWidget {
   final Note note;
   final VoidCallback? onTap;
-  const NoteListItem({super.key, required this.note, this.onTap});
+  final AppLocalization _localization;
+  const NoteListItem(this._localization,
+      {super.key, required this.note, this.onTap});
 
   String _formatDate(DateTime dt) {
     // Simple date formatting without intl dependency.
@@ -36,7 +39,7 @@ class NoteListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      note.title.isEmpty ? '(Untitled)' : note.title,
+                      note.title.isEmpty ? _localization.untitled : note.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleMedium,

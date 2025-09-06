@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 
 class MarkdownToolbar extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback? onChanged;
-  const MarkdownToolbar({super.key, required this.controller, this.onChanged});
+  final AppLocalization _localization;
+  const MarkdownToolbar(this._localization,
+      {super.key, required this.controller, this.onChanged});
 
   void _wrapSelection(String left, String right) {
     final text = controller.text;
@@ -65,19 +68,19 @@ class MarkdownToolbar extends StatelessWidget {
           children: [
             _ToolButton(
                 icon: Icons.format_bold,
-                label: 'Bold',
+                label: _localization.bold,
                 onPressed: () => _wrapSelection('**', '**')),
             _ToolButton(
                 icon: Icons.format_italic,
-                label: 'Italic',
+                label: _localization.italic,
                 onPressed: () => _wrapSelection('*', '*')),
             _ToolButton(
                 icon: Icons.code,
-                label: 'Code',
+                label: _localization.code,
                 onPressed: () => _wrapSelection('`', '`')),
             _ToolButton(
                 icon: Icons.link,
-                label: 'Link',
+                label: _localization.link,
                 onPressed: () {
                   final text = controller.text;
                   final sel = controller.selection;
@@ -85,7 +88,8 @@ class MarkdownToolbar extends StatelessWidget {
                   final end = sel.end;
                   if (start < 0 || end < 0) return;
                   final selected = text.substring(start, end);
-                  final linkText = selected.isEmpty ? 'title' : selected;
+                  final linkText =
+                      selected.isEmpty ? _localization.linkTitleDefault : selected;
                   final insert = '[$linkText](https://)';
                   final newText = text.replaceRange(start, end, insert);
                   controller.value = controller.value.copyWith(
@@ -97,23 +101,23 @@ class MarkdownToolbar extends StatelessWidget {
                 }),
             _ToolButton(
                 icon: Icons.title,
-                label: 'H1',
+                label: _localization.h1,
                 onPressed: () => _insertAtLineStart('#')),
             _ToolButton(
                 icon: Icons.title,
-                label: 'H2',
+                label: _localization.h2,
                 onPressed: () => _insertAtLineStart('##')),
             _ToolButton(
                 icon: Icons.format_list_bulleted,
-                label: '• List',
+                label: _localization.bulletList,
                 onPressed: () => _insertAtLineStart('-')),
             _ToolButton(
                 icon: Icons.format_list_numbered,
-                label: '1. List',
+                label: _localization.numberList,
                 onPressed: () => _insertAtLineStart('1.')),
             _ToolButton(
                 icon: Icons.horizontal_rule,
-                label: 'Rule',
+                label: _localization.rule,
                 onPressed: () {
                   final t = controller.text;
                   final sel = controller.selection;
