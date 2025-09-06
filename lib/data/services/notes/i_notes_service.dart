@@ -3,6 +3,7 @@ import 'package:markdown_notes/data/models/notes_filter.dart';
 
 abstract class INotesService {
   Future<List<Note>> getAll();
+  Future<Note> getNote(String id);
   Future<void> saveAll(List<Note> notes);
 
   List<Note> applyFilter(List<Note> notes, NotesFilter filter);

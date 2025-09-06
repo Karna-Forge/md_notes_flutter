@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:markdown_notes/routing/models/editor_screen_args.dart';
 import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
-import 'package:markdown_notes/ui/edit/widgets/editor_page.dart';
+import 'package:markdown_notes/ui/edit/viewmodels/editor_screen_viewmodel.dart';
+import 'package:markdown_notes/ui/edit/widgets/editor_screen.dart';
 import 'package:markdown_notes/ui/home/viewmodels/home_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '/ui/home/widgets/home_screen.dart';
@@ -25,10 +26,14 @@ List<RouteBase> _commonRoutes = [
     path: Routes.editScreen,
     builder: (context, state) {
       final extra = state.extra as EditorScreenArgs;
-      return EditorPage(
-        context.read(),
-        noteId: extra.id,
-        isNew: extra.isNew,
+      return ChangeNotifierProvider(
+        create: (_) =>
+            EditorScreenViewmodel(context.read(), context.read(), extra),
+        child: EditorScreen(
+          context.read(),
+          noteId: extra.id,
+          isNew: extra.isNew,
+        ),
       );
     },
   ),

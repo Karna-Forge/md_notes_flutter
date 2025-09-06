@@ -85,4 +85,9 @@ class NotesService implements INotesService {
       archived: archived,
     );
   }
+
+  @override
+  Future<Note> getNote(String id) async {
+    return _cache.firstWhere((item) => item.id == id);
+  }
 }

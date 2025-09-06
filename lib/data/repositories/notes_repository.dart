@@ -63,4 +63,9 @@ class NotesRepository implements INotesRepository {
     final all = await _svc.getAll();
     await _svc.saveAll(all);
   }
+
+  @override
+  Future<Note> getNote(String id) async {
+    return _svc.getNote(id);
+  }
 }

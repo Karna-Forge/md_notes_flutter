@@ -2,6 +2,7 @@ import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/data/models/notes_filter.dart';
 
 abstract class INotesRepository {
+  Future<Note> getNote(String id);
   Future<List<Note>> listNotes(NotesFilter filter);
 
   Future<Note> create({
