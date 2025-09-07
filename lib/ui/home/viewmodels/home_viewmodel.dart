@@ -66,7 +66,12 @@ class HomeViewModel extends BaseViewModel {
     return n;
   }
 
-  Future<Note> createEmpty() async {
+  Future<void> createAndEditNewNotes() async {
+    final newNote = await _createEmpty();
+    gotoEditorPage(EditorScreenArgs(id: newNote.id, isNew: true));
+  }
+
+  Future<Note> _createEmpty() async {
     final n = await _repo.create(title: "", content: "");
     await _getNotes();
     return n;

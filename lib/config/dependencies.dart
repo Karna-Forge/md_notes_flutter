@@ -8,7 +8,6 @@ import 'package:markdown_notes/data/services/storage/json_notes_storage.dart';
 import 'package:markdown_notes/data/services/storage/storage_service.dart';
 import 'package:markdown_notes/routing/navigation_service.dart';
 import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
-import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '/routing/router.dart';
@@ -39,11 +38,7 @@ List<SingleChildWidget> _commonRepositories = [
     create: (context) => NotesRepository(context.read()) as INotesRepository,
   )
 ];
-List<SingleChildWidget> _commonViewmodels = [
-  ChangeNotifierProvider(
-    create: (context) => NotesProvider(context.read()),
-  )
-];
+List<SingleChildWidget> _commonViewmodels = [];
 
 /// Configure dependencies for remote data.
 /// This dependency list uses repositories that connect to a remote server.

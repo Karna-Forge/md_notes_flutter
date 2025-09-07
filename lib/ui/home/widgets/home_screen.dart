@@ -4,7 +4,6 @@ import 'package:markdown_notes/routing/models/editor_screen_args.dart';
 import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 import 'package:markdown_notes/ui/core/ui/basewidgets/base_padding_widget.dart';
 import 'package:markdown_notes/ui/home/viewmodels/home_viewmodel.dart';
-import 'package:markdown_notes/ui/home/viewmodels/notes_provider.dart';
 import 'package:markdown_notes/widgets/note_list_item.dart';
 import 'package:provider/provider.dart';
 
@@ -58,11 +57,7 @@ class HomeScreen extends StatelessWidget {
           : _NotesList(
               notes: notes, localization: _localization, viewModel: viewModel),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final created = await context.read<NotesProvider>().createEmpty();
-          viewModel
-              .gotoEditorPage(EditorScreenArgs(id: created.id, isNew: true));
-        },
+        onPressed: viewModel.createAndEditNewNotes,
         icon: const Icon(Icons.add),
         label: Text(_localization.newNote),
       ),
