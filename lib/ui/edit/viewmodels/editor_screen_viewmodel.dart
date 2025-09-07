@@ -8,32 +8,38 @@ class EditorScreenViewmodel extends BaseViewModel {
   final INavigationService _service;
   final INotesRepository _repo;
   final EditorScreenArgs _args;
-  EditorScreenViewmodel(this._service, this._repo, this._args);
+  EditorScreenViewmodel(this._service, this._repo, this._args) {
+    init();
+  }
 
   late Note _note;
 
-  String get title => _note.title;
+  String _title = '';
+  String get title => _title;
 
   bool _isArchived = false;
-  bool get iaArchived => _isArchived;
+  bool get isArchived => _isArchived;
 
   bool _isPinned = false;
-  bool get iaPinned => _isPinned;
+  bool get isPinned => _isPinned;
 
   String _content = '';
   String get content => _content;
 
   @override
   Future<void> init() async {
+    showLoading();
     await getNote();
-    updateNotesInfo();
+    await _updateNotesInfo();
+    stopLoading();
   }
 
   Future<void> getNote() async {
-    await _repo.getNote(_args.id);
+    _note = await _repo.getNote(_args.id);
   }
 
-  Future<void> updateNotesInfo() async {
+  Future<void> _updateNotesInfo() async {
+    _title = _note.title;
     _content = _note.content;
     _isArchived = _note.archived;
     _isPinned = _note.pinned;
@@ -51,8 +57,20 @@ class EditorScreenViewmodel extends BaseViewModel {
     notifyChanges();
   }
 
-  Future<void> delete(Note note) async {
-    await _repo.delete(note.id);
+  Future<void> saveContent(String content) async {
+    _content = content;
+    _update(_note, content: _content);
+    notifyChanges();
+  }
+
+  Future<void> saveTitle(String title) async {
+    _title = title;
+    _update(_note, title: title);
+    notifyChanges();
+  }
+
+  Future<void> delete() async {
+    await _repo.delete(_args.id);
     goBack();
   }
 
