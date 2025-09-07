@@ -28,11 +28,19 @@ class _EditorScreenState extends State<EditorScreen> {
     super.dispose();
   }
 
+  void _setInitialInfo(EditorScreenViewmodel viewModel) {
+    if (_titleCtrl.text != viewModel.title) {
+      _titleCtrl.text = viewModel.title;
+    }
+    if (_contentCtrl.text != viewModel.content) {
+      _contentCtrl.text = viewModel.content;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<EditorScreenViewmodel>();
-    _titleCtrl.text = viewModel.title;
-    _contentCtrl.text = viewModel.content;
+    _setInitialInfo(viewModel);
 
     return Scaffold(
       appBar: AppBar(
