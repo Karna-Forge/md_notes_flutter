@@ -35,7 +35,10 @@ class EditorScreenViewmodel extends BaseViewModel {
   }
 
   Future<void> getNote() async {
-    _note = await _repo.getNote(_args.id);
+    final res = await _repo.getNote(_args.id);
+    if (res.isSuccess) {
+      _note = res.data!;
+    }
   }
 
   Future<void> _updateNotesInfo() async {
@@ -76,9 +79,11 @@ class EditorScreenViewmodel extends BaseViewModel {
 
   Future<void> _update(Note note,
       {String? title, String? content, bool? pinned, bool? archived}) async {
-    await _repo.update(note,
+    final res = await _repo.update(note,
         title: title, content: content, pinned: pinned, archived: archived);
-    await getNote();
+    if (res.isSuccess) {
+      await getNote();
+    }
   }
 
   Future<void> goBack() async {

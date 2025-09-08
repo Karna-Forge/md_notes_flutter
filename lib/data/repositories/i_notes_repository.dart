@@ -1,18 +1,19 @@
 import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/data/models/notes_filter.dart';
+import 'package:markdown_notes/data/utils/result.dart';
 
 abstract class INotesRepository {
-  Future<Note> getNote(String id);
-  Future<List<Note>> listNotes(NotesFilter filter);
+  Future<Result<Note>> getNote(String id);
+  Future<Result<List<Note>>> listNotes(NotesFilter filter);
 
-  Future<Note> create({
+  Future<Result<Note>> create({
     required String title,
     required String content,
     bool pinned = false,
     bool archived = false,
   });
 
-  Future<Note> update(
+  Future<Result<Note>> update(
     Note note, {
     String? title,
     String? content,
@@ -20,7 +21,7 @@ abstract class INotesRepository {
     bool? archived,
   });
 
-  Future<void> delete(String id);
+  Future<Result<void>> delete(String id);
 
-  Future<void> persist(); // optional no-op for some backends
+  Future<Result<void>> persist(); // optional no-op for some backends
 }

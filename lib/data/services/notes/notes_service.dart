@@ -2,6 +2,7 @@ import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/data/models/notes_filter.dart';
 import 'package:markdown_notes/data/services/notes/i_notes_service.dart';
 import 'package:markdown_notes/data/services/storage/i_notes_storage.dart';
+import 'package:markdown_notes/data/utils/result.dart';
 import 'package:uuid/uuid.dart';
 
 class NotesService implements INotesService {
@@ -15,21 +16,30 @@ class NotesService implements INotesService {
 
   // --- Persistence ---
   @override
-  Future<List<Note>> getAll() async {
-    if (_cache.isEmpty) {
-      _cache
-        ..clear()
-        ..addAll(await _storage.readAll());
+  Future<Result<List<Note>>> getAll() async {
+    try {
+      if (_cache.isEmpty) {
+        _cache
+          ..clear()
+          ..addAll(await _storage.readAll());
+      }
+      return Result.success(List.unmodifiable(_cache));
+    } catch (e) {
+      return Result.failure(e.toString());
     }
-    return List.unmodifiable(_cache);
   }
 
   @override
-  Future<void> saveAll(List<Note> notes) async {
-    _cache
-      ..clear()
-      ..addAll(notes);
-    await _storage.writeAll(_cache);
+  Future<Result<void>> saveAll(List<Note> notes) async {
+    try {
+      _cache
+        ..clear()
+        ..addAll(notes);
+      await _storage.writeAll(_cache);
+      return Result<void>.success(null);
+    } catch (e) {
+      return Result.failure(e.toString());
+    }
   }
 
   // --- Rules ---
@@ -87,7 +97,12 @@ class NotesService implements INotesService {
   }
 
   @override
-  Future<Note> getNote(String id) async {
-    return _cache.firstWhere((item) => item.id == id);
+  Future<Result<Note>> getNote(String id) async {
+    try {
+      final note = _cache.firstWhere((item) => item.id == id);
+      return Result.success(note);
+    } catch (e) {
+      return Result.failure(e.toString());
+    }
   }
 }

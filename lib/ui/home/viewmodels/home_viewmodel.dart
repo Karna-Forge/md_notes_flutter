@@ -37,7 +37,8 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> _getNotes() async {
-    _notes = await _repo.listNotes(_filter);
+    final res = await _repo.listNotes(_filter);
+    _notes = res.data ?? [];
     notifyListeners();
   }
 
@@ -57,11 +58,12 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> gotoEditorPage(EditorScreenArgs args) async {
-    _service.gotoEditorPage(args);
+    await _service.gotoEditorPage(args);
   }
 
   Future<Note> create({required String title, required String content}) async {
-    final n = await _repo.create(title: title, content: content);
+    final res = await _repo.create(title: title, content: content);
+    final n = res.data!;
     await _getNotes();
     return n;
   }
@@ -72,7 +74,8 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<Note> _createEmpty() async {
-    final n = await _repo.create(title: "", content: "");
+    final res = await _repo.create(title: "", content: "");
+    final n = res.data!;
     await _getNotes();
     return n;
   }

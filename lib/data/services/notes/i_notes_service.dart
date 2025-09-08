@@ -1,10 +1,11 @@
 import 'package:markdown_notes/data/models/note.dart';
 import 'package:markdown_notes/data/models/notes_filter.dart';
+import 'package:markdown_notes/data/utils/result.dart';
 
 abstract class INotesService {
-  Future<List<Note>> getAll();
-  Future<Note> getNote(String id);
-  Future<void> saveAll(List<Note> notes);
+  Future<Result<List<Note>>> getAll();
+  Future<Result<Note>> getNote(String id);
+  Future<Result<void>> saveAll(List<Note> notes);
 
   List<Note> applyFilter(List<Note> notes, NotesFilter filter);
 
