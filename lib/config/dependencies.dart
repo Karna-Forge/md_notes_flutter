@@ -5,7 +5,6 @@ import 'package:markdown_notes/data/services/notes/i_notes_service.dart';
 import 'package:markdown_notes/data/services/notes/notes_service.dart';
 import 'package:markdown_notes/data/services/storage/i_notes_storage.dart';
 import 'package:markdown_notes/data/services/storage/json_notes_storage.dart';
-import 'package:markdown_notes/data/services/storage/storage_service.dart';
 import 'package:markdown_notes/routing/navigation_service.dart';
 import 'package:markdown_notes/ui/core/loacalization/app_localization.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +19,7 @@ List<SingleChildWidget> _commonServices = [
     create: (context) => AppLocalization(),
   ),
   Provider(
-    create: (context) => StorageService(),
-  ),
-  Provider(
-    create: (context) => JsonNotesStorage(context.read()) as INotesStorage,
+    create: (context) => JsonNotesStorage() as INotesStorage,
   ),
   Provider(
     create: (context) => NotesService(context.read()) as INotesService,
