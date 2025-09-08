@@ -21,7 +21,7 @@ class EditorScreen extends StatefulWidget {
 class _EditorScreenState extends State<EditorScreen> {
   final _titleCtrl = TextEditingController();
   final _contentCtrl = TextEditingController();
-  bool _preview = false;
+  bool _preview = true;
 
   @override
   void dispose() {
