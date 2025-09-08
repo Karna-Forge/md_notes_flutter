@@ -37,55 +37,57 @@ class _EditorScreenState extends State<EditorScreen> {
     }
   }
 
+  Future<void> _openRenameDialog(EditorScreenViewmodel viewModel) async {
+    _titleCtrl.text = viewModel.title;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(widget._localization.editNoteTitle),
+        content: TextField(
+          controller: _titleCtrl,
+          autofocus: true,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (v) {
+            viewModel.saveTitle(v);
+            Navigator.of(ctx).pop();
+          },
+          decoration: InputDecoration(
+            hintText: widget._localization.titleHint,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              viewModel.saveTitle(_titleCtrl.text);
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<EditorScreenViewmodel>();
     _setInitialInfo(viewModel);
 
-    Future<void> _openRenameDialog() async {
-      _titleCtrl.text = viewModel.title;
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(widget._localization.editNoteTitle),
-          content: TextField(
-            controller: _titleCtrl,
-            autofocus: true,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (v) {
-              viewModel.saveTitle(v);
-              Navigator.of(ctx).pop();
-            },
-            decoration: InputDecoration(
-              hintText: widget._localization.titleHint,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                viewModel.saveTitle(_titleCtrl.text);
-                Navigator.of(ctx).pop();
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return WillPopScope(
-      onWillPop: () async {
-        await viewModel.goBack(refetch: viewModel.shouldRefetch);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          viewModel.goBack(refetch: viewModel.shouldRefetch);
+        }
       },
       child: Scaffold(
         appBar: AppBar(
           title: InkWell(
-            onTap: _openRenameDialog,
+            onTap: () => _openRenameDialog(viewModel),
             child: Text(
               viewModel.title.isEmpty
                   ? widget._localization.untitled
