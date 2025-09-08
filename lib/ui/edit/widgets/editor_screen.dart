@@ -42,6 +42,41 @@ class _EditorScreenState extends State<EditorScreen> {
     final viewModel = context.watch<EditorScreenViewmodel>();
     _setInitialInfo(viewModel);
 
+    Future<void> _openRenameDialog() async {
+      _titleCtrl.text = viewModel.title;
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(widget._localization.editNoteTitle),
+          content: TextField(
+            controller: _titleCtrl,
+            autofocus: true,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (v) {
+              viewModel.saveTitle(v);
+              Navigator.of(ctx).pop();
+            },
+            decoration: InputDecoration(
+              hintText: widget._localization.titleHint,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                viewModel.saveTitle(_titleCtrl.text);
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      );
+    }
+
     return WillPopScope(
       onWillPop: () async {
         await viewModel.goBack(refetch: viewModel.shouldRefetch);
@@ -49,9 +84,15 @@ class _EditorScreenState extends State<EditorScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(viewModel.title.isEmpty
-              ? widget._localization.newNoteTitle
-              : widget._localization.editNoteTitle),
+          title: InkWell(
+            onTap: _openRenameDialog,
+            child: Text(
+              viewModel.title.isEmpty
+                  ? widget._localization.untitled
+                  : viewModel.title,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           actions: [
             IconButton(
               tooltip: _preview
@@ -88,18 +129,7 @@ class _EditorScreenState extends State<EditorScreen> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-              child: TextField(
-                controller: _titleCtrl,
-                onChanged: viewModel.saveTitle,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  hintText: widget._localization.titleHint,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-            ),
+            // Title moved to AppBar; tap title to rename
             MarkdownToolbar(widget._localization,
                 controller: _contentCtrl,
                 onChanged: () => viewModel.saveContent(_contentCtrl.text)),
