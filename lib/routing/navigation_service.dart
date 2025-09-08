@@ -11,13 +11,13 @@ class NavigationService extends INavigationService {
 
   @override
   Future<Result<bool>> gotoEditorPage(EditorScreenArgs args) async {
-    _router.push(Routes.editScreen, extra: args);
-    return Result.success(true);
+    final res = await _router.push<bool>(Routes.editScreen, extra: args);
+    return Result.success(res ?? false);
   }
 
   @override
-  Future<Result<bool>> goBack() async {
-    _router.pop();
+  Future<Result<bool>> goBack([bool? result]) async {
+    _router.pop(result);
     return Result.success(true);
   }
 }

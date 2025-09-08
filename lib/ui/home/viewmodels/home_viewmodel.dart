@@ -58,7 +58,10 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> gotoEditorPage(EditorScreenArgs args) async {
-    await _service.gotoEditorPage(args);
+    final res = await _service.gotoEditorPage(args);
+    if (res.data == true) {
+      await _getNotes();
+    }
   }
 
   Future<Note> create({required String title, required String content}) async {
