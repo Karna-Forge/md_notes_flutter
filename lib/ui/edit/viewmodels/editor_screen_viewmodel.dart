@@ -16,6 +16,10 @@ class EditorScreenViewmodel extends BaseViewModel {
   bool _shouldRefetch = false;
   bool get shouldRefetch => _shouldRefetch;
 
+  void _markShouldRefetch() {
+    _shouldRefetch = true;
+  }
+
   String _title = '';
   String get title => _title;
 
@@ -52,35 +56,35 @@ class EditorScreenViewmodel extends BaseViewModel {
 
   Future<void> togglePin() async {
     _isPinned = !_isPinned;
-    _shouldRefetch = true;
+    _markShouldRefetch();
     _update(_note, pinned: _isPinned);
     notifyChanges();
   }
 
   Future<void> toogleArchived() async {
     _isArchived = !_isArchived;
-    _shouldRefetch = true;
+    _markShouldRefetch();
     _update(_note, archived: _isArchived);
     notifyChanges();
   }
 
   Future<void> saveContent(String content) async {
     _content = content;
-    _shouldRefetch = true;
+    _markShouldRefetch();
     _update(_note, content: _content);
     notifyChanges();
   }
 
   Future<void> saveTitle(String title) async {
     _title = title;
-    _shouldRefetch = true;
+    _markShouldRefetch();
     _update(_note, title: title);
     notifyChanges();
   }
 
   Future<void> delete() async {
     await _repo.delete(_args.id);
-    _shouldRefetch = true;
+    _markShouldRefetch();
     goBack(refetch: true);
   }
 
