@@ -60,14 +60,14 @@ class _EditorScreenState extends State<EditorScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(widget._localization.cancel),
           ),
           TextButton(
             onPressed: () {
               viewModel.saveTitle(_titleCtrl.text);
               Navigator.of(ctx).pop();
             },
-            child: const Text('Save'),
+            child: Text(widget._localization.save),
           ),
         ],
       ),

@@ -10,6 +10,8 @@ class AppLocalization {
     // Common
     'noDateMsg': 'No Date Selected',
     'retry': 'Retry',
+    'cancel': 'Cancel',
+    'save': 'Save',
 
     // App / Home
     'markDownNotesTitle': 'Markdown Notes',
@@ -59,6 +61,8 @@ class AppLocalization {
   // Common
   String get noDateMsg => _get('noDateMsg');
   String get retryTitle => _get('retry');
+  String get cancel => _get('cancel');
+  String get save => _get('save');
 
   // Home
   String get markDownNotesTitle => _get('markDownNotesTitle');
