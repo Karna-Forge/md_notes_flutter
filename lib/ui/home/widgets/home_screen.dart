@@ -33,7 +33,12 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             tooltip: _localization.pinSortToolTipMsg,
             onPressed: () => viewModel.togglePinned(),
-            icon: const Icon(Icons.push_pin),
+            icon: Icon(viewModel.pinnedFirst
+                ? Icons.push_pin
+                : Icons.push_pin_outlined),
+            color: viewModel.pinnedFirst
+                ? Theme.of(context).colorScheme.primary
+                : null,
           ),
           const SizedBox(width: 8),
         ],
