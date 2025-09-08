@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:markdown_notes/data/models/note.dart';
 import 'package:path_provider/path_provider.dart';
-import '../models/note.dart';
 
 class StorageService {
   static const _fileName = 'notes.json';
