@@ -14,7 +14,7 @@ val localProps = Properties().apply {
 android {
     namespace = "com.example.markdown_notes"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = localProps["flutter.ndkVersion"]?.toString() ?: "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
