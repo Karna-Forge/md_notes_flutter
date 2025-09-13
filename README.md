@@ -2,6 +2,14 @@
 
 Local‑first Markdown notes app with pin/archive, search, and a clean edit/preview experience. Built with Flutter, Provider, and GoRouter.
 
+# ⛶ Screenshots
+<p float="left">
+  <img src="assets/Edit-mark-down.png" width="200" />
+  <img src="assets/Home-page.png" width="200" />
+  <img src="assets/Preview-mark-down.png" width="200" />
+
+</p>
+
 ## Features
 - 📝 Create, edit, delete notes
 - ⭐ Pin and archive; sort by pinned first
